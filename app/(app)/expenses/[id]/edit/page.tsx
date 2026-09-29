@@ -6,12 +6,13 @@ import { ExpenseForm } from "@/components/expense-form";
 import { Skeleton } from "@/components/ui/skeleton";
 import { getErrorMessage } from "@/lib/api/client";
 import { fetchExpense } from "@/lib/api/expenses";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function ExpenseEditPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const expenseId = Number(id);
   const query = useQuery({
-    queryKey: ["expenses", "detail", expenseId],
+    queryKey: [...queryKeys.expenses.all, "detail", expenseId],
     queryFn: () => fetchExpense(expenseId),
     enabled: Number.isInteger(expenseId) && expenseId > 0,
   });

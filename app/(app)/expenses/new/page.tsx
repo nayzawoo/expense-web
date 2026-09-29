@@ -7,10 +7,11 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { getErrorMessage } from "@/lib/api/client";
 import { fetchExpenseCreateOptions } from "@/lib/api/expenses";
 import { formatMMK } from "@/lib/money";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function ExpenseCreatePage() {
   const query = useQuery({
-    queryKey: ["expenses", "create"],
+    queryKey: queryKeys.expenses.create,
     queryFn: fetchExpenseCreateOptions,
   });
 

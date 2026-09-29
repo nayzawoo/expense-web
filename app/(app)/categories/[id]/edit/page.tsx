@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Layout, Palette, SortAsc, Tag } from "lucide-react";
 import { AdminGate } from "@/components/admin-gate";
 import { CategoryIcon } from "@/components/category-icon";
@@ -15,6 +15,7 @@ import {
   type Category,
 } from "@/lib/api/categories";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 export default function EditCategoryPage() {
   return (
@@ -28,7 +29,7 @@ function CategoryEditLoader() {
   const params = useParams<{ id: string }>();
   const id = Number(params.id);
   const detail = useQuery({
-    queryKey: ["categories", id],
+    queryKey: [...queryKeys.categories.all, id],
     queryFn: () => fetchCategory(id),
     enabled: Number.isFinite(id),
   });
@@ -62,6 +63,7 @@ function CategoryEditLoader() {
 
 function CategoryEditForm({ category }: { category: Category }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [name, setName] = useState(category.name);
   const [color, setColor] = useState(category.color);
   const [icon, setIcon] = useState(category.icon ?? "Banknote");
@@ -75,7 +77,15 @@ function CategoryEditForm({ category }: { category: Category }) {
         icon,
         sort_order: sortOrder,
       }),
-    onSuccess: () => router.push("/categories"),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.categories.all,
+        queryKeys.expenses.all,
+        queryKeys.dashboard.all,
+        queryKeys.analytics.all,
+      ]);
+      router.push("/categories");
+    },
   });
 
   const fieldErrors = isApiError(save.error) ? save.error.errors : undefined;

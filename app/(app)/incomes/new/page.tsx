@@ -17,13 +17,14 @@ import {
   type IncomeAccountOption,
 } from "@/lib/api/incomes";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 const inputClassName =
   "w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground shadow-sm transition-colors focus:border-ring focus:ring-2 focus:ring-ring/20 focus:outline-none";
 
 export default function IncomeCreatePage() {
   const options = useQuery({
-    queryKey: ["incomes", "create"],
+    queryKey: queryKeys.incomes.create,
     queryFn: fetchIncomeCreateOptions,
   });
 
@@ -79,9 +80,12 @@ function IncomeCreateForm({
       setAmount("");
       setNote("");
       setSuccessMessage(data.message);
-      await queryClient.invalidateQueries({ queryKey: ["incomes"] });
-      await queryClient.invalidateQueries({ queryKey: ["analytics"] });
-      await queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.incomes.all,
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.analytics.all,
+      ]);
     },
   });
 

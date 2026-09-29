@@ -2,7 +2,7 @@
 
 import { useParams, useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   CalendarDays,
   Coins,
@@ -24,6 +24,7 @@ import {
   type AccountType,
 } from "@/lib/api/accounts";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 const typeLabels: Record<AccountType, string> = {
   bank: "Bank",
@@ -46,7 +47,7 @@ function AccountEditLoader() {
   const params = useParams<{ id: string }>();
   const id = Number(params.id);
   const detail = useQuery({
-    queryKey: ["accounts", id],
+    queryKey: [...queryKeys.accounts.all, id],
     queryFn: () => fetchAccount(id),
     enabled: Number.isFinite(id),
   });
@@ -87,6 +88,7 @@ function AccountEditForm({
   types: AccountType[];
 }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const today = new Date().toISOString().slice(0, 10);
   const [name, setName] = useState(account.name);
   const [type, setType] = useState<AccountType>(account.type);
@@ -111,7 +113,16 @@ function AccountEditForm({
         sort_order: sortOrder,
         is_active: isActive,
       }),
-    onSuccess: () => router.push("/accounts"),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.expenses.create,
+        queryKeys.incomes.create,
+        queryKeys.transfers.create,
+      ]);
+      router.push("/accounts");
+    },
   });
 
   const fieldErrors = isApiError(save.error) ? save.error.errors : undefined;

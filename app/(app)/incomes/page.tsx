@@ -16,19 +16,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { deleteIncome, fetchIncomes } from "@/lib/api/incomes";
 import { getErrorMessage } from "@/lib/api/client";
 import { formatMMK } from "@/lib/money";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 export default function IncomeLogPage() {
   const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
   const incomes = useQuery({
-    queryKey: ["incomes", page],
+    queryKey: [...queryKeys.incomes.all, page],
     queryFn: () => fetchIncomes(page),
   });
 
   const remove = useMutation({
     mutationFn: deleteIncome,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["incomes"] });
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.incomes.all,
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.analytics.all,
+      ]);
     },
   });
 

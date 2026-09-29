@@ -5,8 +5,9 @@ import { useRouter } from "next/navigation";
 import { fetchMe, login, logout } from "@/lib/api/auth";
 import type { MeResponse } from "@/lib/api/client";
 import { useClientToken } from "@/hooks/use-client-token";
+import { queryKeys } from "@/lib/query-keys";
 
-export const meQueryKey = ["auth", "me"] as const;
+export const meQueryKey = queryKeys.auth.me;
 
 export function useMe(enabled = true) {
   const { token, ready } = useClientToken();

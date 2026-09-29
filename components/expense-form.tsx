@@ -24,6 +24,7 @@ import {
   type ExpenseCategoryOption,
   type ExpenseFormPayload,
 } from "@/lib/api/expenses";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 const inputClass =
   "w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground shadow-sm transition-colors focus:border-ring focus:ring-2 focus:ring-ring/20 focus:outline-none";
@@ -75,10 +76,12 @@ export function ExpenseForm({
     mutationFn: (payload: ExpenseFormPayload) =>
       initial ? updateExpense(initial.id, payload) : createExpense(payload),
     onSuccess: async (data) => {
-      await queryClient.invalidateQueries({ queryKey: ["expenses"] });
-      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      await queryClient.invalidateQueries({ queryKey: ["analytics"] });
-      await queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.expenses.all,
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.analytics.all,
+      ]);
 
       if (initial) {
         router.push("/expenses");

@@ -16,6 +16,7 @@ import {
   type ExpenseFilters,
 } from "@/lib/api/expenses";
 import { formatMMK } from "@/lib/money";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 type QueryFilters = Partial<ExpenseFilters> & { page: number };
 
@@ -60,15 +61,18 @@ export default function ExpensesPage() {
     [debouncedSearch, filters],
   );
   const expenses = useQuery({
-    queryKey: ["expenses", queryFilters],
+    queryKey: [...queryKeys.expenses.all, queryFilters],
     queryFn: () => fetchExpenses(queryFilters),
   });
   const remove = useMutation({
     mutationFn: deleteExpense,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["expenses"] });
-      await queryClient.invalidateQueries({ queryKey: ["analytics"] });
-      await queryClient.invalidateQueries({ queryKey: ["dashboard"] });
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.expenses.all,
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.analytics.all,
+      ]);
     },
   });
 

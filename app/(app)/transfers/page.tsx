@@ -15,19 +15,25 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { deleteTransfer, fetchTransfers } from "@/lib/api/transfers";
 import { getErrorMessage } from "@/lib/api/client";
 import { formatMMK } from "@/lib/money";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 export default function TransferLogPage() {
   const [page, setPage] = useState(1);
   const queryClient = useQueryClient();
   const transfers = useQuery({
-    queryKey: ["transfers", page],
+    queryKey: [...queryKeys.transfers.all, page],
     queryFn: () => fetchTransfers(page),
   });
 
   const remove = useMutation({
     mutationFn: deleteTransfer,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["transfers"] });
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.transfers.all,
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.transfers.create,
+      ]);
     },
   });
 

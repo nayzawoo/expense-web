@@ -9,10 +9,11 @@ import { SpendingInsight } from "@/components/analytics/spending-insight";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchAnalytics } from "@/lib/api/analytics";
 import { getErrorMessage } from "@/lib/api/client";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function AnalyticsPage() {
   const analytics = useQuery({
-    queryKey: ["analytics"],
+    queryKey: queryKeys.analytics.all,
     queryFn: fetchAnalytics,
   });
 

@@ -19,6 +19,7 @@ import {
   reorderCategory,
 } from "@/lib/api/categories";
 import { getErrorMessage } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 export default function CategoriesPage() {
   return (
@@ -31,12 +32,17 @@ export default function CategoriesPage() {
 function CategoriesContent() {
   const queryClient = useQueryClient();
   const categories = useQuery({
-    queryKey: ["categories"],
+    queryKey: queryKeys.categories.all,
     queryFn: fetchCategories,
   });
 
   const invalidate = async () => {
-    await queryClient.invalidateQueries({ queryKey: ["categories"] });
+    await invalidateQueryKeys(queryClient, [
+      queryKeys.categories.all,
+      queryKeys.expenses.all,
+      queryKeys.dashboard.all,
+      queryKeys.analytics.all,
+    ]);
   };
 
   const remove = useMutation({

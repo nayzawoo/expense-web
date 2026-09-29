@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Layout, Palette, SortAsc, Tag } from "lucide-react";
 import { AdminGate } from "@/components/admin-gate";
 import { CategoryIcon } from "@/components/category-icon";
@@ -10,6 +10,7 @@ import { PageHeader } from "@/components/page-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { createCategory } from "@/lib/api/categories";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 export default function NewCategoryPage() {
   return (
@@ -21,6 +22,7 @@ export default function NewCategoryPage() {
 
 function CategoryCreateForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [color, setColor] = useState("#6366f1");
   const [icon, setIcon] = useState("Banknote");
@@ -28,7 +30,15 @@ function CategoryCreateForm() {
 
   const create = useMutation({
     mutationFn: createCategory,
-    onSuccess: () => router.push("/categories"),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.categories.all,
+        queryKeys.expenses.all,
+        queryKeys.dashboard.all,
+        queryKeys.analytics.all,
+      ]);
+      router.push("/categories");
+    },
   });
 
   const fieldErrors = isApiError(create.error) ? create.error.errors : undefined;

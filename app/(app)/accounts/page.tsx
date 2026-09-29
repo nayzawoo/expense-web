@@ -17,6 +17,7 @@ import { useMe } from "@/hooks/use-auth";
 import { fetchAccounts, toggleAccountActive } from "@/lib/api/accounts";
 import { getErrorMessage } from "@/lib/api/client";
 import { formatMMK } from "@/lib/money";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 const typeMeta = {
   bank: { label: "Bank", icon: Landmark },
@@ -30,12 +31,21 @@ export default function AccountsPage() {
   const me = useMe();
   const isAdmin = Boolean(me.data?.user?.is_admin);
   const queryClient = useQueryClient();
-  const accounts = useQuery({ queryKey: ["accounts"], queryFn: fetchAccounts });
+  const accounts = useQuery({
+    queryKey: queryKeys.accounts.all,
+    queryFn: fetchAccounts,
+  });
 
   const toggle = useMutation({
     mutationFn: toggleAccountActive,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.expenses.create,
+        queryKeys.incomes.create,
+        queryKeys.transfers.create,
+      ]);
     },
   });
 

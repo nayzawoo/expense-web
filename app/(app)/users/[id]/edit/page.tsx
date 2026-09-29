@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AdminGate } from "@/components/admin-gate";
 import { PageHeader } from "@/components/page-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -12,8 +12,10 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useMe } from "@/hooks/use-auth";
 import { fetchUser, updateUser, type ManagedUser } from "@/lib/api/users";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 type EditableUser = Omit<
   ManagedUser,
@@ -32,7 +34,7 @@ function EditUserLoader() {
   const params = useParams<{ id: string }>();
   const id = Number(params.id);
   const detail = useQuery({
-    queryKey: ["users", id],
+    queryKey: [...queryKeys.users.all, id],
     queryFn: () => fetchUser(id),
     enabled: Number.isFinite(id),
   });
@@ -73,6 +75,8 @@ function EditUserForm({
   isLastAdmin: boolean;
 }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const me = useMe();
   const [name, setName] = useState(user.name);
   const [email, setEmail] = useState(user.email);
   const [password, setPassword] = useState("");
@@ -88,7 +92,15 @@ function EditUserForm({
         password_confirmation: password ? passwordConfirmation : undefined,
         is_admin: isAdmin,
       }),
-    onSuccess: () => router.push("/users"),
+    onSuccess: async () => {
+      await invalidateQueryKeys(
+        queryClient,
+        me.data?.user?.id === user.id
+          ? [queryKeys.users.all, queryKeys.auth.me]
+          : [queryKeys.users.all],
+      );
+      router.push("/users");
+    },
   });
 
   const fieldErrors = isApiError(save.error) ? save.error.errors : undefined;

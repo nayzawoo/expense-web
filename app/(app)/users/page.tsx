@@ -19,6 +19,7 @@ import {
 import { deleteUser, fetchUsers } from "@/lib/api/users";
 import { cn } from "@/lib/utils";
 import { getErrorMessage } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 export default function UsersPage() {
   return (
@@ -30,11 +31,14 @@ export default function UsersPage() {
 
 function UsersContent() {
   const queryClient = useQueryClient();
-  const users = useQuery({ queryKey: ["users"], queryFn: fetchUsers });
+  const users = useQuery({
+    queryKey: queryKeys.users.all,
+    queryFn: fetchUsers,
+  });
   const remove = useMutation({
     mutationFn: deleteUser,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["users"] });
+      await invalidateQueryKeys(queryClient, [queryKeys.users.all]);
     },
   });
 

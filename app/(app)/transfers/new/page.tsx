@@ -18,13 +18,14 @@ import {
 } from "@/lib/api/transfers";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
 import { formatMMK } from "@/lib/money";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 const inputClassName =
   "w-full rounded-lg border border-input bg-background px-3 py-2.5 text-sm text-foreground shadow-sm transition-colors focus:border-ring focus:ring-2 focus:ring-ring/20 focus:outline-none";
 
 export default function TransferCreatePage() {
   const options = useQuery({
-    queryKey: ["transfers", "create"],
+    queryKey: queryKeys.transfers.create,
     queryFn: fetchTransferCreateOptions,
   });
 
@@ -91,9 +92,12 @@ function TransferCreateForm({
       setAmount("");
       setNote("");
       setSuccessMessage(data.message);
-      await queryClient.invalidateQueries({ queryKey: ["transfers"] });
-      await queryClient.invalidateQueries({ queryKey: ["accounts"] });
-      await queryClient.invalidateQueries({ queryKey: ["transfers", "create"] });
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.transfers.all,
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.transfers.create,
+      ]);
     },
   });
 

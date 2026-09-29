@@ -7,9 +7,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Skeleton } from "@/components/ui/skeleton";
-import { meQueryKey, useMe } from "@/hooks/use-auth";
+import { useMe } from "@/hooks/use-auth";
 import { getErrorMessage, isApiError, type ApiUser } from "@/lib/api/client";
 import { updateProfile } from "@/lib/api/settings";
+import { queryKeys } from "@/lib/query-keys";
 
 export default function ProfileSettingsPage() {
   const me = useMe();
@@ -40,7 +41,7 @@ function ProfileForm({ user }: { user: ApiUser }) {
   const save = useMutation({
     mutationFn: updateProfile,
     onSuccess: (data) => {
-      queryClient.setQueryData(meQueryKey, { user: data.user });
+      queryClient.setQueryData(queryKeys.auth.me, { user: data.user });
       setSaved(true);
     },
   });

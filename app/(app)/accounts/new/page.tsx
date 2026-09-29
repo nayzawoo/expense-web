@@ -2,7 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   CalendarDays,
   Coins,
@@ -18,6 +18,7 @@ import { PageHeader } from "@/components/page-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { createAccount, type AccountType } from "@/lib/api/accounts";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 const types: AccountType[] = ["bank", "wallet", "cash"];
 
@@ -40,6 +41,7 @@ export default function NewAccountPage() {
 
 function AccountCreateForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const today = new Date().toISOString().slice(0, 10);
   const [name, setName] = useState("");
   const [type, setType] = useState<AccountType>("bank");
@@ -51,7 +53,16 @@ function AccountCreateForm() {
 
   const create = useMutation({
     mutationFn: createAccount,
-    onSuccess: () => router.push("/accounts"),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [
+        queryKeys.accounts.all,
+        queryKeys.dashboard.all,
+        queryKeys.expenses.create,
+        queryKeys.incomes.create,
+        queryKeys.transfers.create,
+      ]);
+      router.push("/accounts");
+    },
   });
 
   const fieldErrors = isApiError(create.error) ? create.error.errors : undefined;

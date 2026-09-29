@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { AdminGate } from "@/components/admin-gate";
 import { PageHeader } from "@/components/page-header";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
@@ -13,6 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { createUser } from "@/lib/api/users";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
+import { invalidateQueryKeys, queryKeys } from "@/lib/query-keys";
 
 export default function NewUserPage() {
   return (
@@ -24,6 +25,7 @@ export default function NewUserPage() {
 
 function NewUserForm() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -32,7 +34,10 @@ function NewUserForm() {
 
   const create = useMutation({
     mutationFn: createUser,
-    onSuccess: () => router.push("/users"),
+    onSuccess: async () => {
+      await invalidateQueryKeys(queryClient, [queryKeys.users.all]);
+      router.push("/users");
+    },
   });
 
   const fieldErrors = isApiError(create.error) ? create.error.errors : undefined;
