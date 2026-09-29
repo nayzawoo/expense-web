@@ -1,6 +1,13 @@
+import { Geist, Sora, Source_Sans_3 } from "next/font/google";
 import type { Metadata } from "next";
-import { Sora, Source_Sans_3 } from "next/font/google";
+import { QueryProvider } from "@/components/providers/query-provider";
+import { cn } from "@/lib/utils";
 import "./globals.css";
+
+const geist = Geist({
+  subsets: ["latin"],
+  variable: "--font-sans",
+});
 
 const sora = Sora({
   variable: "--font-display",
@@ -22,9 +29,16 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${sora.variable} ${sourceSans.variable} h-full antialiased`}
+      className={cn(
+        "h-full antialiased font-sans",
+        geist.variable,
+        sora.variable,
+        sourceSans.variable,
+      )}
     >
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }
