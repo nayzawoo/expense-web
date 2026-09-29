@@ -38,33 +38,28 @@ export function AppSidebar() {
     },
     {
       title: "ထွက်ငွေ ထည့်ရန်",
-      href: "#",
+      href: "/expenses/new",
       icon: MinusCircle,
-      disabled: true,
     },
     {
       title: "ထွက်ငွေ မှတ်တမ်း",
-      href: "#",
+      href: "/expenses",
       icon: History,
-      disabled: true,
     },
     {
       title: "ဝင်ငွေ ထည့်ရန်",
-      href: "#",
+      href: "/incomes/new",
       icon: PlusCircle,
-      disabled: true,
     },
     {
       title: "ဝင်ငွေ မှတ်တမ်း",
-      href: "#",
+      href: "/incomes",
       icon: History,
-      disabled: true,
     },
     {
       title: "Analytics",
-      href: "#",
+      href: "/analytics",
       icon: BarChart3,
-      disabled: true,
     },
     {
       title: "Accounts",
