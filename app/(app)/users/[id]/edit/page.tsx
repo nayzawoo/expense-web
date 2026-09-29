@@ -180,7 +180,11 @@ function EditUserForm({
           <Button type="submit" disabled={save.isPending}>
             {save.isPending ? "Saving…" : "Save changes"}
           </Button>
-          <Button variant="outline" render={<Link href="/users" />}>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href="/users" />}
+          >
             Cancel
           </Button>
         </div>

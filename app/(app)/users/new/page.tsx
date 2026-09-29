@@ -123,7 +123,11 @@ function NewUserForm() {
           <Button type="submit" disabled={create.isPending}>
             {create.isPending ? "Saving…" : "Create user"}
           </Button>
-          <Button variant="outline" render={<Link href="/users" />}>
+          <Button
+            variant="outline"
+            nativeButton={false}
+            render={<Link href="/users" />}
+          >
             Cancel
           </Button>
         </div>
