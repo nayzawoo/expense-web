@@ -4,14 +4,6 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { ApiError } from "@/lib/api/client";
@@ -37,65 +29,94 @@ export default function LoginPage() {
         : null;
 
   return (
-    <div className="flex flex-1 items-center justify-center bg-muted/40 px-4 py-10">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>Sign in</CardTitle>
-          <CardDescription>
-            Use your Expense account to open the dashboard.
-          </CardDescription>
-        </CardHeader>
-        <form onSubmit={onSubmit}>
-          <CardContent className="space-y-4">
-            {formError ? (
-              <Alert variant="destructive">
-                <AlertTitle>Login failed</AlertTitle>
-                <AlertDescription>{formError}</AlertDescription>
-              </Alert>
-            ) : null}
+    <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">
+      <div className="w-full max-w-sm">
+        <div className="flex flex-col gap-8">
+          <div className="flex flex-col items-center gap-4">
+            <Link
+              href="/"
+              className="flex flex-col items-center gap-2 font-medium"
+            >
+              <div className="mb-1 flex size-9 items-center justify-center rounded-md bg-primary text-sm font-bold text-primary-foreground">
+                E
+              </div>
+              <span className="sr-only">Expense</span>
+            </Link>
 
-            <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-              {fieldErrors?.email?.[0] ? (
-                <p className="text-sm text-destructive">{fieldErrors.email[0]}</p>
-              ) : null}
+            <div className="space-y-2 text-center">
+              <h1 className="text-xl font-medium">Log in to your account</h1>
+              <p className="text-center text-sm text-muted-foreground">
+                Enter your email and password below to log in
+              </p>
             </div>
+          </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                type="password"
-                autoComplete="current-password"
-                required
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-              {fieldErrors?.password?.[0] ? (
-                <p className="text-sm text-destructive">
-                  {fieldErrors.password[0]}
-                </p>
+          <form onSubmit={onSubmit} className="flex flex-col gap-6">
+            <div className="grid gap-6">
+              {formError ? (
+                <Alert variant="destructive">
+                  <AlertTitle>Login failed</AlertTitle>
+                  <AlertDescription>{formError}</AlertDescription>
+                </Alert>
               ) : null}
+
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email address</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  autoFocus
+                  required
+                  placeholder="email@example.com"
+                  value={email}
+                  onValueChange={setEmail}
+                  aria-invalid={Boolean(fieldErrors?.email)}
+                />
+                {fieldErrors?.email?.[0] ? (
+                  <p className="text-sm text-destructive">
+                    {fieldErrors.email[0]}
+                  </p>
+                ) : null}
+              </div>
+
+              <div className="grid gap-2">
+                <Label htmlFor="password">Password</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  autoComplete="current-password"
+                  required
+                  placeholder="Password"
+                  value={password}
+                  onValueChange={setPassword}
+                  aria-invalid={Boolean(fieldErrors?.password)}
+                />
+                {fieldErrors?.password?.[0] ? (
+                  <p className="text-sm text-destructive">
+                    {fieldErrors.password[0]}
+                  </p>
+                ) : null}
+              </div>
+
+              <Button
+                type="submit"
+                className="mt-2 w-full"
+                disabled={login.isPending}
+                size="lg"
+              >
+                {login.isPending ? "Logging in…" : "Log in"}
+              </Button>
             </div>
-          </CardContent>
-          <CardFooter className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <Button type="submit" disabled={login.isPending} className="w-full sm:w-auto">
-              {login.isPending ? "Signing in…" : "Sign in"}
-            </Button>
-            <Link href="/" className="text-sm text-muted-foreground hover:text-foreground">
+          </form>
+
+          <p className="text-center text-sm text-muted-foreground">
+            <Link href="/" className="underline-offset-4 hover:underline">
               Back to home
             </Link>
-          </CardFooter>
-        </form>
-      </Card>
+          </p>
+        </div>
+      </div>
     </div>
   );
 }

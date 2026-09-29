@@ -30,7 +30,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html
       lang="en"
       className={cn(
-        "h-full antialiased font-sans",
+        "dark h-full antialiased font-sans",
         geist.variable,
         sora.variable,
         sourceSans.variable,

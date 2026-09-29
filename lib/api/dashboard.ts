@@ -1,5 +1,7 @@
 import { apiRequest } from "@/lib/api/client";
 
+export type Direction = "up" | "down" | "flat";
+
 export type DashboardPayload = {
   month_label: string;
   balance: {
@@ -13,6 +15,7 @@ export type DashboardPayload = {
       current_balance: number;
       is_active: boolean;
     }>;
+    has_more?: boolean;
   };
   monthOverview: {
     expense: number;
@@ -21,27 +24,51 @@ export type DashboardPayload = {
     previous_same_period_expense: number;
     difference_amount: number;
     difference_percent: number | null;
-    direction: string;
+    direction: Direction;
     comparison_label: string;
   };
-  spendingPace: unknown;
-  categoryChanges: unknown[];
+  spendingPace: Array<{ day: number; current: number; previous: number }>;
+  categoryChanges: {
+    increased: Array<{
+      id: number;
+      name: string;
+      color: string;
+      icon: string;
+      difference_amount: number;
+      is_new?: boolean;
+    }>;
+    decreased: Array<{
+      id: number;
+      name: string;
+      color: string;
+      icon: string;
+      difference_amount: number;
+      is_new?: boolean;
+    }>;
+  };
   topCategories: Array<{
-    id?: number;
+    id: number | null;
     name: string;
+    color: string;
+    icon: string;
     amount: number;
-    percent?: number;
+    percentage: number;
   }>;
   recentActivity: Array<{
     id: string;
-    type: string;
+    type: "expense" | "income" | "transfer" | string;
     title?: string;
     subtitle?: string;
     note?: string | null;
     amount: number;
     date: string;
+    color?: string | null;
+    icon?: string;
   }>;
-  spendingByPerson: unknown;
+  spendingByPerson: Array<{
+    person_name: string;
+    total: number;
+  }>;
 };
 
 export async function fetchDashboard(): Promise<DashboardPayload> {

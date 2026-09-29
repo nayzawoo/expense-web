@@ -24,7 +24,7 @@ export default function Home() {
             </a>
             <Link
               href="/login"
-              className="rounded-md bg-landing-ink px-3 py-1.5 font-medium text-white transition-opacity hover:opacity-90"
+              className="rounded-md bg-landing-accent px-3 py-1.5 font-medium text-landing-bg transition-opacity hover:opacity-90"
             >
               Log in
             </Link>
@@ -62,7 +62,7 @@ export default function Home() {
               >
                 <Link
                   href="/login"
-                  className="rounded-md bg-landing-accent px-5 py-2.5 text-sm font-medium text-white transition-opacity hover:opacity-90"
+                  className="rounded-md bg-landing-accent px-5 py-2.5 text-sm font-medium text-landing-bg transition-opacity hover:opacity-90"
                 >
                   Start tracking
                 </Link>

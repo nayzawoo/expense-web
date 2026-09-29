@@ -1,0 +1,138 @@
+"use client";
+
+import Link from "next/link";
+import {
+  ArrowRightLeft,
+  BarChart3,
+  History,
+  LayoutGrid,
+  MinusCircle,
+  PlusCircle,
+  Settings,
+  Users,
+  Wallet,
+} from "lucide-react";
+import { NavMain } from "@/components/nav-main";
+import { NavUser } from "@/components/nav-user";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+} from "@/components/ui/sidebar";
+import { useMe } from "@/hooks/use-auth";
+import type { NavItem } from "@/types/nav";
+
+export function AppSidebar() {
+  const { data } = useMe();
+  const isAdmin = Boolean(data?.user?.is_admin);
+
+  const mainNavItems: NavItem[] = [
+    {
+      title: "Dashboard",
+      href: "/dashboard",
+      icon: LayoutGrid,
+    },
+    {
+      title: "ထွက်ငွေ ထည့်ရန်",
+      href: "#",
+      icon: MinusCircle,
+      disabled: true,
+    },
+    {
+      title: "ထွက်ငွေ မှတ်တမ်း",
+      href: "#",
+      icon: History,
+      disabled: true,
+    },
+    {
+      title: "ဝင်ငွေ ထည့်ရန်",
+      href: "#",
+      icon: PlusCircle,
+      disabled: true,
+    },
+    {
+      title: "ဝင်ငွေ မှတ်တမ်း",
+      href: "#",
+      icon: History,
+      disabled: true,
+    },
+    {
+      title: "Analytics",
+      href: "#",
+      icon: BarChart3,
+      disabled: true,
+    },
+    {
+      title: "Accounts",
+      href: "#",
+      icon: Wallet,
+      disabled: true,
+    },
+    {
+      title: "Transfer",
+      href: "#",
+      icon: ArrowRightLeft,
+      disabled: true,
+    },
+    {
+      title: "Transfer Log",
+      href: "#",
+      icon: History,
+      disabled: true,
+    },
+    ...(isAdmin
+      ? [
+          {
+            title: "Users (Admin)",
+            href: "#",
+            icon: Users,
+            disabled: true,
+          },
+          {
+            title: "Categories (Admin)",
+            href: "#",
+            icon: Settings,
+            disabled: true,
+          },
+        ]
+      : []),
+  ];
+
+  return (
+    <Sidebar collapsible="icon" variant="inset">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton
+              size="lg"
+              render={<Link href="/dashboard" />}
+              tooltip="Expense Manager"
+            >
+              <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground text-sm font-bold">
+                E
+              </div>
+              <div className="grid flex-1 text-left text-sm leading-tight">
+                <span className="truncate font-semibold">Expense Manager</span>
+                <span className="truncate text-xs text-muted-foreground">
+                  Household
+                </span>
+              </div>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
+
+      <SidebarContent>
+        <NavMain items={mainNavItems} />
+      </SidebarContent>
+
+      <SidebarFooter>
+        <NavUser />
+      </SidebarFooter>
+    </Sidebar>
+  );
+}

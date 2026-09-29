@@ -3,15 +3,17 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { fetchMe, login, logout } from "@/lib/api/auth";
-import { getStoredToken } from "@/lib/api/client";
+import { useClientToken } from "@/hooks/use-client-token";
 
 export const meQueryKey = ["auth", "me"] as const;
 
 export function useMe(enabled = true) {
+  const { token, ready } = useClientToken();
+
   return useQuery({
     queryKey: meQueryKey,
     queryFn: fetchMe,
-    enabled: enabled && Boolean(getStoredToken()),
+    enabled: enabled && ready && Boolean(token),
   });
 }
 
