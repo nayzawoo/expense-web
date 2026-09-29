@@ -31,10 +31,10 @@ jobs:
       - name: Lint
         run: npm run lint
 
-      # - name: Typecheck
-      #   run: npm run typecheck
+      - name: Typecheck
+        run: npm run typecheck
 
-      # - name: Build
-      #   run: npm run build
-      #   env:
-      #     NEXT_PUBLIC_API_URL: https://example.com
+      - name: Build
+        run: npm run build
+        env:
+          NEXT_PUBLIC_API_URL: https://example.com
