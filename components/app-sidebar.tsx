@@ -73,15 +73,13 @@ export function AppSidebar() {
     },
     {
       title: "Transfer",
-      href: "#",
+      href: "/transfers/new",
       icon: ArrowRightLeft,
-      disabled: true,
     },
     {
       title: "Transfer Log",
-      href: "#",
+      href: "/transfers",
       icon: History,
-      disabled: true,
     },
     ...(isAdmin
       ? [

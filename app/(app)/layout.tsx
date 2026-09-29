@@ -10,6 +10,12 @@ function breadcrumbsFor(pathname: string) {
   if (pathname.startsWith("/settings")) {
     return [{ title: "Settings", href: "/settings/profile" }];
   }
+  if (pathname.startsWith("/transfers/new")) {
+    return [{ title: "Transfer", href: "/transfers/new" }];
+  }
+  if (pathname.startsWith("/transfers")) {
+    return [{ title: "Transfer Log", href: "/transfers" }];
+  }
   if (pathname.startsWith("/users")) {
     return [{ title: "Users", href: "/users" }];
   }
