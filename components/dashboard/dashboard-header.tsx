@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { ListOrdered, MinusCircle, PlusCircle } from "lucide-react";
 
 export function DashboardHeader({ monthLabel }: { monthLabel: string }) {
@@ -9,18 +10,27 @@ export function DashboardHeader({ monthLabel }: { monthLabel: string }) {
       </div>
 
       <div className="flex flex-wrap gap-2">
-        <span className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 dark:border-rose-800 dark:bg-rose-900/20 dark:text-rose-300">
+        <Link
+          href="/expenses/new"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-rose-200 bg-rose-50 px-3 py-2 text-sm font-medium text-rose-700 transition-colors hover:bg-rose-100 dark:border-rose-800 dark:bg-rose-900/20 dark:text-rose-300 dark:hover:bg-rose-900/40"
+        >
           <MinusCircle className="h-4 w-4" />
           Expense
-        </span>
-        <span className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300">
+        </Link>
+        <Link
+          href="/incomes/new"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-emerald-200 bg-emerald-50 px-3 py-2 text-sm font-medium text-emerald-700 transition-colors hover:bg-emerald-100 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-300 dark:hover:bg-emerald-900/40"
+        >
           <PlusCircle className="h-4 w-4" />
           Income
-        </span>
-        <span className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-foreground">
+        </Link>
+        <Link
+          href="/expenses"
+          className="inline-flex items-center gap-1.5 rounded-lg border border-border bg-background px-3 py-2 text-sm font-medium text-foreground transition-colors hover:bg-accent"
+        >
           <ListOrdered className="h-4 w-4" />
           Expense Log
-        </span>
+        </Link>
       </div>
     </header>
   );
