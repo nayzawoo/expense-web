@@ -9,7 +9,7 @@ export function SpendingForSummary({ items }: { items: Item[] }) {
   }
 
   return (
-    <section className="rounded-xl border border-border/80 bg-muted/20 p-4">
+    <section className="dashboard-panel bg-muted/20 p-4 shadow-none">
       <h2 className="text-sm font-semibold text-foreground">Spending For</h2>
       <div className="mt-3 space-y-2">
         {items.map((item) => (

@@ -8,6 +8,7 @@ import { DashboardHeader } from "@/components/dashboard/dashboard-header";
 import { MonthOverviewCards } from "@/components/dashboard/month-overview";
 import { RecentActivity } from "@/components/dashboard/recent-activity";
 import { SpendingForSummary } from "@/components/dashboard/spending-for-summary";
+import { SpendingPaceChart } from "@/components/dashboard/spending-pace-chart";
 import { TopCategories } from "@/components/dashboard/top-categories";
 import { useClientToken } from "@/hooks/use-client-token";
 import { useDashboard } from "@/hooks/use-dashboard";
@@ -64,6 +65,8 @@ export default function DashboardPage() {
       />
 
       <MonthOverviewCards overview={data.monthOverview} />
+
+      <SpendingPaceChart data={data.spendingPace ?? []} />
 
       <div className="grid gap-6 lg:grid-cols-2">
         <CategoryChangeSummary

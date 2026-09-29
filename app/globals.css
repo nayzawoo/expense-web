@@ -176,9 +176,10 @@ html {
   --landing-panel-muted: #8fb0a8;
   --landing-line: #273330;
 
+  /* Match expense dark tokens: solid borders, card = background */
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
+  --card: oklch(0.145 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
@@ -191,8 +192,8 @@ html {
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
+  --border: oklch(0.269 0 0);
+  --input: oklch(0.269 0 0);
   --ring: oklch(0.556 0 0);
   --chart-1: oklch(0.87 0 0);
   --chart-2: oklch(0.556 0 0);
@@ -207,6 +208,22 @@ html {
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+.dashboard-panel {
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border);
+  background: var(--card);
+  padding: 1.25rem;
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.06),
+    0 1px 3px rgb(0 0 0 / 0.08);
+}
+
+.dark .dashboard-panel {
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.35),
+    0 0 0 1px rgb(255 255 255 / 0.03);
 }
 
 .dark .page-wash {

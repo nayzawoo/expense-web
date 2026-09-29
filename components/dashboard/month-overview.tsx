@@ -23,7 +23,7 @@ export function MonthOverviewCards({ overview }: { overview: Overview }) {
 
   return (
     <section className="grid gap-4 sm:grid-cols-3">
-      <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="dashboard-panel">
         <p className="text-sm text-muted-foreground">Spent This Month</p>
         <p className="mt-2 text-2xl font-bold text-foreground tabular-nums">
           {formatMMK(overview.expense)}
@@ -45,14 +45,14 @@ export function MonthOverviewCards({ overview }: { overview: Overview }) {
         </div>
       </div>
 
-      <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="dashboard-panel">
         <p className="text-sm text-muted-foreground">Income This Month</p>
         <p className="mt-2 text-2xl font-bold text-emerald-700 tabular-nums dark:text-emerald-400">
           {formatMMK(overview.income)}
         </p>
       </div>
 
-      <div className="rounded-xl border border-border bg-card p-5 shadow-sm">
+      <div className="dashboard-panel">
         <p className="text-sm text-muted-foreground">Net This Month</p>
         <p
           className={`mt-2 text-2xl font-bold tabular-nums ${

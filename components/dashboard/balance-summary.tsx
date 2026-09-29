@@ -13,7 +13,7 @@ export function BalanceSummary({
   hasMore?: boolean;
 }) {
   return (
-    <section className="rounded-xl border border-border bg-card p-5 shadow-sm">
+    <section className="dashboard-panel">
       <p className="text-sm text-muted-foreground">Total Balance</p>
       <p className="mt-2 text-3xl font-bold tracking-tight text-foreground tabular-nums">
         {formatMMK(total)}
