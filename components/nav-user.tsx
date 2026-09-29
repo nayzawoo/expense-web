@@ -1,10 +1,12 @@
 "use client";
 
-import { ChevronsUpDown, LogOut } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -17,6 +19,7 @@ import { useIsMobile } from "@/hooks/use-mobile";
 import { useLogout, useMe } from "@/hooks/use-auth";
 
 export function NavUser() {
+  const router = useRouter();
   const { data, isPending } = useMe();
   const logout = useLogout();
   const { state, isMobile, setOpenMobile } = useSidebar();
@@ -43,9 +46,7 @@ export function NavUser() {
     <SidebarMenu>
       <SidebarMenuItem>
         <DropdownMenu>
-          <DropdownMenuTrigger
-            className="flex w-full items-center gap-2 rounded-md p-2 text-left text-sm outline-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 data-[popup-open]:bg-sidebar-accent"
-          >
+          <DropdownMenuTrigger className="flex w-full cursor-pointer items-center gap-2 rounded-md p-2 text-left text-sm outline-none hover:bg-sidebar-accent hover:text-sidebar-accent-foreground focus-visible:ring-2 data-[popup-open]:bg-sidebar-accent">
             <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground">
               {user.name.slice(0, 1).toUpperCase()}
             </div>
@@ -68,6 +69,18 @@ export function NavUser() {
                   : "bottom"
             }
           >
+            <DropdownMenuItem
+              onClick={() => {
+                if (isMobile) {
+                  setOpenMobile(false);
+                }
+                router.push("/settings/profile");
+              }}
+            >
+              <Settings />
+              Settings
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() => {
                 if (isMobile) {

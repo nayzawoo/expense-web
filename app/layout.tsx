@@ -1,6 +1,7 @@
 import { Geist, Sora, Source_Sans_3 } from "next/font/google";
 import type { Metadata } from "next";
 import { QueryProvider } from "@/components/providers/query-provider";
+import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
@@ -25,19 +26,43 @@ export const metadata: Metadata = {
     "A lightweight expense tracker to log spending, watch budgets, and stay in control.",
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+const themeInitScript = `
+(function () {
+  try {
+    var appearance = localStorage.getItem('appearance') || 'system';
+    var dark =
+      appearance === 'dark' ||
+      (appearance === 'system' &&
+        window.matchMedia('(prefers-color-scheme: dark)').matches);
+    document.documentElement.classList.toggle('dark', dark);
+    document.documentElement.style.colorScheme = dark ? 'dark' : 'light';
+  } catch (_) {}
+})();
+`;
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={cn(
-        "dark h-full antialiased font-sans",
+        "h-full antialiased font-sans",
         geist.variable,
         sora.variable,
         sourceSans.variable,
       )}
     >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
+      </head>
       <body className="flex min-h-full flex-col">
-        <QueryProvider>{children}</QueryProvider>
+        <ThemeProvider>
+          <QueryProvider>{children}</QueryProvider>
+        </ThemeProvider>
       </body>
     </html>
   );

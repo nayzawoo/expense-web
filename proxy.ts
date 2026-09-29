@@ -7,6 +7,7 @@ const protectedPaths = [
   "/users",
   "/categories",
   "/accounts",
+  "/settings",
 ];
 const guestOnlyPaths = ["/login"];
 
@@ -39,6 +40,7 @@ export const config = {
     "/users/:path*",
     "/categories/:path*",
     "/accounts/:path*",
+    "/settings/:path*",
     "/login",
   ],
 };

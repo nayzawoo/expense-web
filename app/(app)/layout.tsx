@@ -7,6 +7,9 @@ import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
 function breadcrumbsFor(pathname: string) {
+  if (pathname.startsWith("/settings")) {
+    return [{ title: "Settings", href: "/settings/profile" }];
+  }
   if (pathname.startsWith("/users")) {
     return [{ title: "Users", href: "/users" }];
   }
