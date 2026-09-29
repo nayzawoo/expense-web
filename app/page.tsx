@@ -1,69 +1,132 @@
-import Image from "next/image";
+import { HeroVisual } from "./components/hero-visual";
+import { SiteFooter } from "./components/site-footer";
+import { TrackerPreview } from "./components/tracker-preview";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
+    <div className="flex min-h-full flex-1 flex-col">
+      <header className="absolute inset-x-0 top-0 z-20">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between px-6 py-5 sm:px-8">
+          <a href="#top" className="font-display text-lg font-bold tracking-tight text-ink">
+            Expense
           </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          <nav className="flex items-center gap-5 text-sm font-medium text-ink-soft sm:gap-6">
+            <a href="#clarity" className="hidden transition-colors hover:text-ink sm:inline">
+              Why
+            </a>
+            <a href="#try" className="hidden transition-colors hover:text-ink sm:inline">
+              Try it
+            </a>
+            <a
+              href="#try"
+              className="rounded-[var(--radius-control)] bg-teal px-3.5 py-2 text-foam transition-colors hover:bg-teal-deep"
+            >
+              Open tracker
+            </a>
+          </nav>
         </div>
+      </header>
+
+      <main id="top" className="flex flex-1 flex-col">
+        <section className="atmosphere relative isolate min-h-svh overflow-hidden">
+          <div className="grain" aria-hidden />
+          <HeroVisual />
+
+          <div className="relative z-10 mx-auto flex min-h-svh w-full max-w-6xl items-center px-6 pb-20 pt-28 sm:px-8 lg:pb-24">
+            <div className="max-w-xl">
+              <p className="animate-rise font-display text-5xl font-extrabold leading-none tracking-tight text-ink sm:text-6xl md:text-7xl">
+                Expense
+              </p>
+              <h1 className="animate-rise-delay-1 mt-5 font-display text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl">
+                See where your money goes.
+              </h1>
+              <p className="animate-rise-delay-2 mt-4 max-w-md text-base leading-7 text-ink-soft sm:text-lg">
+                A modern personal tracker that stays on your device — clear
+                categories, calm focus, zero clutter.
+              </p>
+              <div className="animate-rise-delay-3 mt-8 flex flex-wrap items-center gap-3">
+                <a
+                  href="#try"
+                  className="rounded-[var(--radius-control)] bg-teal px-5 py-3 text-sm font-semibold text-foam transition-colors hover:bg-teal-deep"
+                >
+                  Start tracking
+                </a>
+                <a
+                  href="#clarity"
+                  className="rounded-[var(--radius-control)] border border-line bg-foam/55 px-5 py-3 text-sm font-semibold text-ink backdrop-blur-sm transition-colors hover:bg-foam"
+                >
+                  How it feels
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="clarity"
+          className="relative border-t border-line bg-paper px-6 py-24 sm:px-8"
+        >
+          <div className="mx-auto max-w-3xl text-center">
+            <h2 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+              Built for clarity, not dashboards.
+            </h2>
+            <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-ink-soft sm:text-lg">
+              One quiet place to log spending, spot patterns, and stay honest
+              with yourself — without accounts, noise, or server-side storage.
+            </p>
+          </div>
+        </section>
+
+        <section className="border-t border-line bg-mist px-6 py-24 sm:px-8">
+          <div className="mx-auto grid max-w-5xl gap-12 md:grid-cols-3 md:gap-10">
+            {[
+              {
+                title: "Private by design",
+                body: "Runs entirely in the browser. Nothing is sent to a backend — your habits stay yours.",
+              },
+              {
+                title: "Fast to open",
+                body: "Lightweight pages meant for Vercel hosting. Load, log, leave — no setup theater.",
+              },
+              {
+                title: "Calm focus",
+                body: "Space for the amount, the why, and the category. No chart soup competing for attention.",
+              },
+            ].map((item) => (
+              <div key={item.title} className="max-w-sm">
+                <h3 className="font-display text-xl font-bold tracking-tight text-ink">
+                  {item.title}
+                </h3>
+                <p className="mt-3 text-sm leading-6 text-ink-soft sm:text-base">
+                  {item.body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        <section
+          id="try"
+          className="border-t border-line bg-paper px-6 py-24 sm:px-8"
+        >
+          <div className="mx-auto max-w-3xl">
+            <div className="max-w-xl">
+              <h2 className="font-display text-3xl font-bold tracking-tight text-ink sm:text-4xl">
+                Try a quiet entry.
+              </h2>
+              <p className="mt-4 text-base leading-7 text-ink-soft">
+                Add a sample expense below. It lives in this session only —
+                refresh and it resets. No accounts, no server.
+              </p>
+            </div>
+            <div className="mt-10">
+              <TrackerPreview />
+            </div>
+          </div>
+        </section>
       </main>
+
+      <SiteFooter />
     </div>
   );
 }
