@@ -12,6 +12,9 @@ import {
   User,
   Wallet,
 } from "lucide-react";
+import { AccountIcon } from "@/components/account-icon";
+import { CategoryIcon } from "@/components/category-icon";
+import { RichSelect } from "@/components/rich-select";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { getErrorMessage, isApiError } from "@/lib/api/client";
 import {
@@ -158,20 +161,26 @@ export function ExpenseForm({
         icon={Wallet}
         error={errors?.account_id?.[0]}
       >
-        <select
+        <RichSelect
           id="expense-account"
           required
           value={accountId}
-          onChange={(event) => setAccountId(event.target.value)}
-          className={inputClass}
-        >
-          <option value="">-- Account ရွေးချယ်ပါ --</option>
-          {accounts.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.label}
-            </option>
-          ))}
-        </select>
+          onValueChange={setAccountId}
+          placeholder="-- Account ရွေးချယ်ပါ --"
+          options={accounts.map((account) => ({
+            value: String(account.id),
+            label: account.label,
+            leading: (
+              <AccountIcon
+                name={account.name ?? account.label}
+                type={
+                  account.type as "bank" | "wallet" | "cash" | undefined
+                }
+                size="md"
+              />
+            ),
+          }))}
+        />
       </ExpenseField>
 
       <ExpenseField
@@ -180,20 +189,28 @@ export function ExpenseForm({
         icon={Tag}
         error={errors?.category_id?.[0]}
       >
-        <select
+        <RichSelect
           id="expense-category"
           required
           value={categoryId}
-          onChange={(event) => setCategoryId(event.target.value)}
-          className={inputClass}
-        >
-          <option value="">-- Category ရွေးချယ်ပါ --</option>
-          {categories.map((item) => (
-            <option key={item.id} value={item.id}>
-              {item.name}
-            </option>
-          ))}
-        </select>
+          onValueChange={setCategoryId}
+          placeholder="-- Category ရွေးချယ်ပါ --"
+          options={categories.map((category) => ({
+            value: String(category.id),
+            label: category.name,
+            leading: (
+              <span
+                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] shadow-sm ring-1 ring-black/5 dark:ring-white/10"
+                style={{
+                  backgroundColor: `${category.color}22`,
+                  color: category.color,
+                }}
+              >
+                <CategoryIcon name={category.icon} className="h-4.5 w-4.5" />
+              </span>
+            ),
+          }))}
+        />
       </ExpenseField>
 
       <ExpenseField
