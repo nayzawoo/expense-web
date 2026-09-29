@@ -2,7 +2,12 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { AUTH_TOKEN_COOKIE } from "@/lib/api/client";
 
-const protectedPaths = ["/dashboard"];
+const protectedPaths = [
+  "/dashboard",
+  "/users",
+  "/categories",
+  "/accounts",
+];
 const guestOnlyPaths = ["/login"];
 
 export function proxy(request: NextRequest) {
@@ -29,5 +34,11 @@ export function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login"],
+  matcher: [
+    "/dashboard/:path*",
+    "/users/:path*",
+    "/categories/:path*",
+    "/accounts/:path*",
+    "/login",
+  ],
 };

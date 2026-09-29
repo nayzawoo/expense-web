@@ -68,9 +68,8 @@ export function AppSidebar() {
     },
     {
       title: "Accounts",
-      href: "#",
+      href: "/accounts",
       icon: Wallet,
-      disabled: true,
     },
     {
       title: "Transfer",
@@ -88,15 +87,13 @@ export function AppSidebar() {
       ? [
           {
             title: "Users (Admin)",
-            href: "#",
+            href: "/users",
             icon: Users,
-            disabled: true,
           },
           {
             title: "Categories (Admin)",
-            href: "#",
+            href: "/categories",
             icon: Settings,
-            disabled: true,
           },
         ]
       : []),

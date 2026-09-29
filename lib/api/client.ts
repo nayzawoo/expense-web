@@ -97,11 +97,13 @@ export function getStoredToken(): string | null {
 export function setStoredToken(token: string): void {
   window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
   document.cookie = `${AUTH_TOKEN_COOKIE}=${encodeURIComponent(token)}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
+  window.dispatchEvent(new Event("expense-auth-change"));
 }
 
 export function clearStoredToken(): void {
   window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
   document.cookie = `${AUTH_TOKEN_COOKIE}=; path=/; SameSite=Lax; max-age=0`;
+  window.dispatchEvent(new Event("expense-auth-change"));
 }
 
 function readCookie(name: string): string | null {
