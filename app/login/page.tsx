@@ -1,12 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
+import { useState, type SubmitEvent } from "react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ApiError } from "@/lib/api/client";
+import { getErrorMessage, isApiError } from "@/lib/api/client";
 import { useLogin } from "@/hooks/use-auth";
 
 export default function LoginPage() {
@@ -14,19 +14,13 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function onSubmit(event: FormEvent<HTMLFormElement>) {
+  function onSubmit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
     login.mutate({ email, password });
   }
 
-  const fieldErrors =
-    login.error instanceof ApiError ? login.error.errors : undefined;
-  const formError =
-    login.error instanceof ApiError
-      ? login.error.message
-      : login.error
-        ? "Unable to sign in. Try again."
-        : null;
+  const fieldErrors = isApiError(login.error) ? login.error.errors : undefined;
+  const formError = login.error ? getErrorMessage(login.error) : null;
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center gap-6 bg-background p-6 md:p-10">

@@ -2,10 +2,13 @@ export const AUTH_TOKEN_COOKIE = "expense_token";
 export const AUTH_TOKEN_STORAGE_KEY = "expense_token";
 
 export function getApiBaseUrl(): string {
-  const url = process.env.NEXT_PUBLIC_API_URL;
+  const url = process.env.NEXT_PUBLIC_API_URL?.trim();
 
   if (!url) {
-    throw new Error("NEXT_PUBLIC_API_URL is not set");
+    throw new ApiError(
+      0,
+      "Unable to sign in. Please try again later.",
+    );
   }
 
   return url.replace(/\/$/, "");
@@ -37,13 +40,47 @@ export type ApiValidationError = {
 export class ApiError extends Error {
   status: number;
   errors?: Record<string, string[]>;
+  url?: string;
+  causeName?: string;
 
-  constructor(status: number, message: string, errors?: Record<string, string[]>) {
+  constructor(
+    status: number,
+    message: string,
+    options?: {
+      errors?: Record<string, string[]>;
+      url?: string;
+      causeName?: string;
+    },
+  ) {
     super(message);
     this.name = "ApiError";
     this.status = status;
-    this.errors = errors;
+    this.errors = options?.errors;
+    this.url = options?.url;
+    this.causeName = options?.causeName;
   }
+}
+
+export function isApiError(error: unknown): error is ApiError {
+  return (
+    error instanceof ApiError ||
+    (typeof error === "object" &&
+      error !== null &&
+      "name" in error &&
+      (error as { name?: string }).name === "ApiError")
+  );
+}
+
+export function getErrorMessage(error: unknown): string {
+  if (isApiError(error)) {
+    return error.message;
+  }
+
+  if (error instanceof Error && error.message) {
+    return error.message;
+  }
+
+  return "Unable to sign in. Try again.";
 }
 
 export function getStoredToken(): string | null {
@@ -85,10 +122,27 @@ type RequestOptions = {
   token?: string | null;
 };
 
+function describeNetworkFailure(url: string, error: unknown): ApiError {
+  const causeName = error instanceof Error ? error.name : "UnknownError";
+  const causeMessage = error instanceof Error ? error.message : String(error);
+
+  if (process.env.NODE_ENV !== "production") {
+    console.error("[api]", url, causeName, causeMessage);
+  }
+
+  return new ApiError(0, "Unable to reach the server. Please try again.", {
+    url,
+    causeName: `${causeName}: ${causeMessage}`,
+  });
+}
+
 export async function apiRequest<T>(
   path: string,
   options: RequestOptions = {},
 ): Promise<T> {
+  const baseUrl = getApiBaseUrl();
+  const url = `${baseUrl}/api/v1${path}`;
+
   const headers: HeadersInit = {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -100,11 +154,17 @@ export async function apiRequest<T>(
     headers.Authorization = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${getApiBaseUrl()}/api/v1${path}`, {
-    method: options.method ?? "GET",
-    headers,
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
-  });
+  let response: Response;
+
+  try {
+    response = await fetch(url, {
+      method: options.method ?? "GET",
+      headers,
+      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    });
+  } catch (error) {
+    throw describeNetworkFailure(url, error);
+  }
 
   if (response.status === 204) {
     return undefined as T;
@@ -119,8 +179,11 @@ export async function apiRequest<T>(
     const errorPayload = payload as ApiValidationError | null;
     throw new ApiError(
       response.status,
-      errorPayload?.message ?? "Request failed",
-      errorPayload?.errors,
+      errorPayload?.message ?? `Request failed with HTTP ${response.status}`,
+      {
+        errors: errorPayload?.errors,
+        url,
+      },
     );
   }
 
