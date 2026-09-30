@@ -3,6 +3,7 @@
 import { usePathname } from "next/navigation";
 import { AppSidebar } from "@/components/app-sidebar";
 import { AppSidebarHeader } from "@/components/app-sidebar-header";
+import { AuthGuard } from "@/components/auth-guard";
 import { SidebarInset, SidebarProvider } from "@/components/ui/sidebar";
 import { TooltipProvider } from "@/components/ui/tooltip";
 
@@ -50,14 +51,16 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
 
   return (
-    <TooltipProvider>
-      <SidebarProvider>
-        <AppSidebar />
-        <SidebarInset className="overflow-x-hidden">
-          <AppSidebarHeader breadcrumbs={breadcrumbsFor(pathname)} />
-          {children}
-        </SidebarInset>
-      </SidebarProvider>
-    </TooltipProvider>
+    <AuthGuard>
+      <TooltipProvider>
+        <SidebarProvider>
+          <AppSidebar />
+          <SidebarInset className="overflow-x-hidden">
+            <AppSidebarHeader breadcrumbs={breadcrumbsFor(pathname)} />
+            {children}
+          </SidebarInset>
+        </SidebarProvider>
+      </TooltipProvider>
+    </AuthGuard>
   );
 }
