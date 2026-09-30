@@ -26,6 +26,10 @@ export function proxy(request: NextRequest) {
     (path) => pathname === path || pathname.startsWith(`${path}/`),
   );
 
+  if (pathname === "/" && isAuthenticated) {
+    return NextResponse.redirect(new URL("/dashboard", request.url));
+  }
+
   if (isProtected && !isAuthenticated) {
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("next", pathname);
@@ -41,6 +45,7 @@ export function proxy(request: NextRequest) {
 
 export const config = {
   matcher: [
+    "/",
     "/dashboard/:path*",
     "/users/:path*",
     "/categories/:path*",

@@ -1,5 +1,5 @@
 import { Geist, Sora, Source_Sans_3 } from "next/font/google";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { QueryProvider } from "@/components/providers/query-provider";
 import { ThemeProvider } from "@/components/providers/theme-provider";
 import { cn } from "@/lib/utils";
@@ -21,9 +21,40 @@ const sourceSans = Source_Sans_3({
 });
 
 export const metadata: Metadata = {
+  applicationName: "Expense",
   title: "Expense — Modern Expense Tracker",
   description:
     "A lightweight expense tracker to log spending, watch budgets, and stay in control.",
+  appleWebApp: {
+    capable: true,
+    title: "Expense",
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: [
+      {
+        url: "/icons/expense-192.png",
+        sizes: "192x192",
+        type: "image/png",
+      },
+      {
+        url: "/icons/expense-512.png",
+        sizes: "512x512",
+        type: "image/png",
+      },
+    ],
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#ffffff",
 };
 
 const themeInitScript = `
