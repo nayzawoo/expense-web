@@ -28,6 +28,7 @@ Requires Node.js 22+.
 | Variable | Description |
 | --- | --- |
 | `NEXT_PUBLIC_API_URL` | Backend API origin, no trailing slash (e.g. `https://api.example.com`) |
+| `API_KEY` | Shared secret sent as `X-Api-Key` on every API request (must match Laravel `WEB_API_KEY`). On Vercel, set as a private env var; it is inlined at build time. |
 
 Auth uses Bearer tokens. After login, the token is stored in `localStorage` (`expense_token`). A separate `expense_authenticated=1` cookie is set only as a route-guard hint for `proxy.ts` — it never contains the Bearer token.
 

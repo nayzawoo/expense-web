@@ -1,5 +1,6 @@
 export const AUTH_TOKEN_STORAGE_KEY = "expense_token";
 export const AUTH_HINT_COOKIE = "expense_authenticated";
+export const API_KEY_HEADER = "X-Api-Key";
 
 /** Legacy cookie that previously stored the Bearer token — cleared on login/logout. */
 const LEGACY_AUTH_TOKEN_COOKIE = "expense_token";
@@ -15,6 +16,12 @@ export function getApiBaseUrl(): string {
   }
 
   return url.replace(/\/$/, "");
+}
+
+function getApiKey(): string | null {
+  const key = process.env.API_KEY?.trim();
+
+  return key ? key : null;
 }
 
 export type ApiUser = {
@@ -140,6 +147,12 @@ export async function apiRequest<T>(
     Accept: "application/json",
     "Content-Type": "application/json",
   };
+
+  const apiKey = getApiKey();
+
+  if (apiKey) {
+    headers[API_KEY_HEADER] = apiKey;
+  }
 
   const token = options.token === undefined ? getStoredToken() : options.token;
 
