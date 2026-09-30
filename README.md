@@ -29,7 +29,7 @@ Requires Node.js 22+.
 | --- | --- |
 | `NEXT_PUBLIC_API_URL` | Backend API origin, no trailing slash (e.g. `https://api.example.com`) |
 
-Auth uses Bearer tokens. After login, the token is stored in `localStorage` and mirrored as the `expense_token` cookie for route protection.
+Auth uses Bearer tokens. After login, the token is stored in `localStorage` (`expense_token`). A separate `expense_authenticated=1` cookie is set only as a route-guard hint for `proxy.ts` — it never contains the Bearer token.
 
 ## App routes
 

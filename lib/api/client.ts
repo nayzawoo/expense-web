@@ -1,5 +1,8 @@
-export const AUTH_TOKEN_COOKIE = "expense_token";
 export const AUTH_TOKEN_STORAGE_KEY = "expense_token";
+export const AUTH_HINT_COOKIE = "expense_authenticated";
+
+/** Legacy cookie that previously stored the Bearer token — cleared on login/logout. */
+const LEGACY_AUTH_TOKEN_COOKIE = "expense_token";
 
 export function getApiBaseUrl(): string {
   const url = process.env.NEXT_PUBLIC_API_URL?.trim();
@@ -88,34 +91,22 @@ export function getStoredToken(): string | null {
     return null;
   }
 
-  return (
-    window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY) ??
-    readCookie(AUTH_TOKEN_COOKIE)
-  );
+  return window.localStorage.getItem(AUTH_TOKEN_STORAGE_KEY);
 }
 
 export function setStoredToken(token: string): void {
   window.localStorage.setItem(AUTH_TOKEN_STORAGE_KEY, token);
-  document.cookie = `${AUTH_TOKEN_COOKIE}=${encodeURIComponent(token)}; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
+  document.cookie = `${AUTH_HINT_COOKIE}=1; path=/; SameSite=Lax; max-age=${60 * 60 * 24 * 30}`;
+  // Remove any leftover Bearer token cookie from the previous storage scheme.
+  document.cookie = `${LEGACY_AUTH_TOKEN_COOKIE}=; path=/; SameSite=Lax; max-age=0`;
   window.dispatchEvent(new Event("expense-auth-change"));
 }
 
 export function clearStoredToken(): void {
   window.localStorage.removeItem(AUTH_TOKEN_STORAGE_KEY);
-  document.cookie = `${AUTH_TOKEN_COOKIE}=; path=/; SameSite=Lax; max-age=0`;
+  document.cookie = `${AUTH_HINT_COOKIE}=; path=/; SameSite=Lax; max-age=0`;
+  document.cookie = `${LEGACY_AUTH_TOKEN_COOKIE}=; path=/; SameSite=Lax; max-age=0`;
   window.dispatchEvent(new Event("expense-auth-change"));
-}
-
-function readCookie(name: string): string | null {
-  const match = document.cookie
-    .split("; ")
-    .find((row) => row.startsWith(`${name}=`));
-
-  if (!match) {
-    return null;
-  }
-
-  return decodeURIComponent(match.split("=").slice(1).join("="));
 }
 
 type RequestOptions = {
