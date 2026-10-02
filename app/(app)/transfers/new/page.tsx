@@ -10,6 +10,8 @@ import {
   Wallet,
 } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { AccountIcon } from "@/components/account-icon";
+import { RichSelect } from "@/components/rich-select";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
   createTransfer,
@@ -81,10 +83,17 @@ function TransferCreateForm({
     [accounts, fromAccountId],
   );
 
-  const toAccounts = useMemo(
-    () => accounts.filter((account) => String(account.id) !== fromAccountId),
-    [accounts, fromAccountId],
-  );
+  const accountOptions = accounts.map((account) => ({
+    value: String(account.id),
+    label: account.label,
+    leading: (
+      <AccountIcon
+        name={account.name ?? account.label}
+        type={account.type as "bank" | "wallet" | "cash" | undefined}
+        size="md"
+      />
+    ),
+  }));
 
   const create = useMutation({
     mutationFn: createTransfer,
@@ -179,12 +188,11 @@ function TransferCreateForm({
                   <Wallet className="h-4 w-4 text-muted-foreground" />
                   From Account
                 </label>
-                <select
+                <RichSelect
                   id="transfer-from"
                   required
                   value={fromAccountId}
-                  onChange={(event) => {
-                    const nextFrom = event.target.value;
+                  onValueChange={(nextFrom) => {
                     setFromAccountId(nextFrom);
                     if (toAccountId === nextFrom) {
                       const fallback = accounts.find(
@@ -193,15 +201,9 @@ function TransferCreateForm({
                       setToAccountId(fallback ? String(fallback.id) : "");
                     }
                   }}
-                  className={inputClassName}
-                >
-                  <option value="">-- From account ရွေးချယ်ပါ --</option>
-                  {accounts.map((account) => (
-                    <option key={account.id} value={account.id}>
-                      {account.label}
-                    </option>
-                  ))}
-                </select>
+                  placeholder="-- From account ရွေးချယ်ပါ --"
+                  options={accountOptions}
+                />
                 {fromAccount ? (
                   <p className="text-xs text-muted-foreground">
                     Available balance: {formatMMK(fromAccount.current_balance)}
@@ -223,20 +225,16 @@ function TransferCreateForm({
                   <ArrowRightLeft className="h-4 w-4 text-muted-foreground" />
                   To Account
                 </label>
-                <select
+                <RichSelect
                   id="transfer-to"
                   required
                   value={toAccountId}
-                  onChange={(event) => setToAccountId(event.target.value)}
-                  className={inputClassName}
-                >
-                  <option value="">-- To account ရွေးချယ်ပါ --</option>
-                  {toAccounts.map((account) => (
-                    <option key={account.id} value={account.id}>
-                      {account.label}
-                    </option>
-                  ))}
-                </select>
+                  onValueChange={setToAccountId}
+                  placeholder="-- To account ရွေးချယ်ပါ --"
+                  options={accountOptions.filter(
+                    (account) => account.value !== fromAccountId,
+                  )}
+                />
                 {fieldErrors?.to_account_id?.[0] ? (
                   <p className="text-xs text-destructive">
                     {fieldErrors.to_account_id[0]}
