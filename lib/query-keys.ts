@@ -39,6 +39,10 @@ export const queryKeys = {
   users: {
     all: ["users"] as const,
   },
+
+  adjustments: {
+    all: ["adjustments"] as const,
+  },
 } as const;
 
 export async function invalidateQueryKeys(

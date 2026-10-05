@@ -9,6 +9,7 @@ import {
   MinusCircle,
   PlusCircle,
   Settings,
+  Scale,
   Users,
   Wallet,
 } from "lucide-react";
@@ -87,6 +88,11 @@ export function AppSidebar() {
             title: "Categories (Admin)",
             href: "/categories",
             icon: Settings,
+          },
+          {
+            title: "Adjustments",
+            href: "/adjustments",
+            icon: Scale,
           },
         ]
       : []),

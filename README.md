@@ -43,7 +43,8 @@ Auth uses Bearer tokens. After login, the token is stored in `localStorage` (`ex
 | Incomes | `/incomes`, `/incomes/new` |
 | Transfers | `/transfers`, `/transfers/new` |
 | Analytics | `/analytics` |
-| Accounts | `/accounts`, `/accounts/new`, `/accounts/[id]/edit` |
+| Accounts | `/accounts`, `/accounts/new`, `/accounts/[id]/edit`, `/accounts/[id]/reconcile` |
+| Adjustments | `/adjustments` |
 | Categories | `/categories`, `/categories/new`, `/categories/[id]/edit` |
 | Users | `/users`, `/users/new`, `/users/[id]/edit` |
 | Settings | `/settings/profile`, `/settings/security`, `/settings/appearance` |
@@ -84,6 +85,8 @@ Base URL: `{NEXT_PUBLIC_API_URL}/api/v1`
 | CRUD + reorder | `/categories`, `/categories/{id}`, `/categories/{id}/reorder/{up\|down}` | Categories |
 | `POST`/`GET`/`PUT` | `/accounts`, `/accounts/{id}` | Account create / show / update |
 | `PATCH` | `/accounts/{id}/toggle-active` | Activate / deactivate |
+| `POST` | `/accounts/{id}/reconcile` | Reconcile to actual balance (`actual_balance`, optional `note`) |
+| `GET`/`DELETE` | `/adjustments`, `/adjustments/{id}` | Adjustment history / delete |
 
 Client wrappers live under `lib/api/*`.
 

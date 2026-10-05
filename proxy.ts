@@ -12,6 +12,7 @@ const protectedPaths = [
   "/expenses",
   "/incomes",
   "/analytics",
+  "/adjustments",
 ];
 const guestOnlyPaths = ["/login"];
 
@@ -55,6 +56,7 @@ export const config = {
     "/expenses/:path*",
     "/incomes/:path*",
     "/analytics/:path*",
+    "/adjustments/:path*",
     "/login",
   ],
 };

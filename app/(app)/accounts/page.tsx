@@ -8,6 +8,7 @@ import {
   Landmark,
   Plus,
   Power,
+  Scale,
   Wallet,
 } from "lucide-react";
 import { AccountIcon } from "@/components/account-icon";
@@ -176,13 +177,20 @@ export default function AccountsPage() {
                           </div>
 
                           {isAdmin ? (
-                            <div className="flex shrink-0 gap-2 self-end sm:self-center">
+                            <div className="flex shrink-0 flex-wrap gap-2 self-end sm:self-center">
                               <Link
                                 href={`/accounts/${account.id}/edit`}
-                                className="inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
-                                title="Edit"
+                                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
                               >
                                 <Edit2 className="h-3.5 w-3.5" />
+                                Edit
+                              </Link>
+                              <Link
+                                href={`/accounts/${account.id}/reconcile`}
+                                className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-sm font-medium text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                              >
+                                <Scale className="h-3.5 w-3.5" />
+                                Reconcile
                               </Link>
                               <button
                                 type="button"
@@ -199,16 +207,14 @@ export default function AccountsPage() {
                                   }
                                 }}
                                 disabled={toggle.isPending}
-                                className={`inline-flex h-8 w-8 items-center justify-center rounded-md border border-border bg-background transition-colors ${
+                                className={`inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-sm font-medium transition-colors disabled:opacity-50 ${
                                   account.is_active
                                     ? "text-amber-600 hover:bg-amber-50 dark:hover:bg-amber-900/20"
                                     : "text-emerald-600 hover:bg-emerald-50 dark:hover:bg-emerald-900/20"
                                 }`}
-                                title={
-                                  account.is_active ? "Deactivate" : "Activate"
-                                }
                               >
                                 <Power className="h-3.5 w-3.5" />
+                                {account.is_active ? "Deactivate" : "Activate"}
                               </button>
                             </div>
                           ) : null}

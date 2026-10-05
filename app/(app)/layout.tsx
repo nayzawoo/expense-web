@@ -35,11 +35,20 @@ function breadcrumbsFor(pathname: string) {
   if (pathname.startsWith("/analytics")) {
     return [{ title: "Analytics", href: "/analytics" }];
   }
+  if (pathname.startsWith("/adjustments")) {
+    return [{ title: "Adjustments", href: "/adjustments" }];
+  }
   if (pathname.startsWith("/users")) {
     return [{ title: "Users", href: "/users" }];
   }
   if (pathname.startsWith("/categories")) {
     return [{ title: "Categories", href: "/categories" }];
+  }
+  if (pathname.includes("/accounts/") && pathname.endsWith("/reconcile")) {
+    return [
+      { title: "Accounts", href: "/accounts" },
+      { title: "Reconcile", href: pathname },
+    ];
   }
   if (pathname.startsWith("/accounts")) {
     return [{ title: "Accounts", href: "/accounts" }];
